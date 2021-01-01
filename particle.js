@@ -1,7 +1,7 @@
 /*
  * @Author: RyanYang
  * @Date: 2020-12-26 19:11:00
- * @LastEditTime: 2021-01-01 19:40:32
+ * @LastEditTime: 2021-01-01 19:43:17
  * @LastEditors: Please set LastEditors
  * @Description: 	
  * includes:
@@ -69,15 +69,8 @@ function cParticleSystem() {
   this.particleCount = 0;
   this.elapsedTime = 0;
   this.duration = -1;
-  this.emissionRate = 0;
-  this.emitCounter = 0;
   this.particleIndex = 0;
 
-  this.init = function () {
-    //In case too many particles cover up space
-    this.emissionRate = this.maxParticles / this.lifeSpan;
-    this.emitCounter = 0;
-  };
   /**
    * @description: creat a new Particle, init it and put into particle pools
    * @param {*}
@@ -146,16 +139,10 @@ function cParticleSystem() {
 
   this.update = function (delta) {
     //Whether to add new Particle
-    if (this.active && this.emissionRate > 0) {
-      const rate = 1 / this.emissionRate;
-      this.emitCounter += delta;
-      //屏幕上的粒子数永远是maxParticles?
-      while (
-        this.particleCount < this.maxParticles &&
-        this.emitCounter > rate
-      ) {
+    if (this.active) {
+      //屏幕上的粒子数永远是maxParticles
+      while (this.particleCount < this.maxParticles) {
         this.addParticle();
-        this.emitCounter -= rate;
       }
       this.elapsedTime += delta;
       if (this.duration != -1 && this.duration < this.elapsedTime) {
